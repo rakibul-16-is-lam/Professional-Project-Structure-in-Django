@@ -1,0 +1,53 @@
+✅ Method 1 : Windows CMD Version
+
+# for %a in (core accounts boats trips crew fuel
+ice_food catch maintenance nets tracking accounts)
+do python manage.py startapp %a apps/%a
+
+## এই কমান্ডটি Django প্রোজেক্টে এক সাথে অনেকগুলো App তৈরি করার একটি শর্টকাট উপায়। এটি মূলত উইন্ডোজের (Windows Command Prompt) একটি লুপ কমান্ড।
+নিচে সহজভাবে এর ব্যাখ্যা দেওয়া হলো:
+
+১. কমান্ডের মূল কাজ
+আপনি ব্র্যাকেটের ভেতর যে নামগুলো লিখেছেন (core, accounts, boats ইত্যাদি), এই কমান্ডটি প্রতিটি নামের জন্য আলাদা আলাদা ড্যাঙ্গো অ্যাপ তৈরি করবে। অর্থাৎ, এটি বারবার python manage.py startapp app_name কমান্ডটি চালানোর বদলে একবারে সব করে দিচ্ছে।
+২. অংশের ব্যাখ্যা:
+
+for %a in (...): এটি একটি লুপ। ব্র্যাকেটের ভেতর থাকা প্রতিটি শব্দকে সে এক একবার %a ভেরিয়েবল হিসেবে ধরবে।
+do: এর মানে হলো, লুপের ভেতরে থাকা শব্দগুলো নিয়ে নিচের কাজটি করো।
+python manage.py startapp %a: এটি ড্যাঙ্গোর স্ট্যান্ডার্ড কমান্ড যা একটি নতুন অ্যাপ তৈরি করে। এখানে %a এর জায়গায় একবার core, একবার accounts এভাবে বসে অ্যাপ তৈরি হবে।
+apps/%a: এটি নির্দেশ করছে যে অ্যাপগুলো সরাসরি মেইন ফোল্ডারে তৈরি না হয়ে apps/ নামক একটি ফোল্ডারের ভেতরে তৈরি হবে।
+৩. একটি সমস্যা ও সমাধান (সতর্কতা)
+
+আপনি যদি এই কমান্ডটি হুবহু চালান, তবে এরর আসার সম্ভাবনা আছে। কারণ:
+
+১. ফোল্ডার থাকা আবশ্যক: এই কমান্ড চালানোর আগে আপনার প্রজেক্টে apps নামে একটি ফোল্ডার আগে থেকে তৈরি করে নিতে হবে।
+২. পাথ (Path) সমস্যা: সাধারণত startapp কমান্ডটি শুধু অ্যাপের নাম নেয়, পাথ নয়। প্রফেশনাল ভাবে অ্যাপগুলো apps/ ফোল্ডারে রাখতে চাইলে আপনাকে প্রথমে apps ফোল্ডারে গিয়ে কমান্ডটি চালাতে হবে অথবা অ্যাপ তৈরির পর ম্যানুয়ালি মুভ করতে হবে।
+আপনি যদি উইন্ডোজ ব্যবহার করেন, তবে সঠিক কমান্ড হবে
+:
+প্রথমে apps ফোল্ডার তৈরি করুন, তারপর এটি চালান:
+
+## cmd
+mkdir apps
+for %a in (core accounts boats trips crew fuel ice_food catch maintenance nets tracking) do python manage.py startapp %a
+Use code with caution.
+
+
+✅ Method 2: PowerShell Version
+
+$apps = "core","accounts","boats","trips","crew","fuel","ice_food","catch","maintenance","nets","tracking"
+
+foreach ($app in $apps) {
+    python manage.py startapp $app apps/$app
+}
+
+├── apps/
+│   ├── core/
+│   ├── accounts/
+│   ├── boats/
+│   ├── trips/
+│   ├── crew/
+│   ├── fuel/
+│   ├── ice_food/
+│   ├── catch/
+│   ├── maintenance/
+│   ├── nets/
+│   └── tracking/
