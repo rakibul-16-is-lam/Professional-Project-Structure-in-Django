@@ -1,0 +1,127 @@
+প্রত্যেকটা app এর জন্য standard এবং professional template structure।
+
+1️⃣ General Principle
+
+Django best practice:
+
+প্রতিটি app এর template আলাদা ফোল্ডারে রাখো
+
+ফোল্ডারের নাম app নাম অনুযায়ী রাখো → conflict এড়াতে
+
+Shared (global) templates → project-level templates/ ফোল্ডারে রাখো
+
+2️⃣ Recommended Template Structure
+project_root/
+├── manage.py
+├── seasmart/
+│   └── settings.py
+├── apps/
+│   ├── accounts/
+│   │   └── templates/
+│   │       └── accounts/
+│   │           ├── login.html
+│   │           ├── register.html
+│   │           └── profile.html
+│   ├── boats/
+│   │   └── templates/
+│   │       └── boats/
+│   │           ├── list.html
+│   │           ├── detail.html
+│   │           └── create.html
+│   ├── catch/
+│   │   └── templates/
+│   │       └── catch/
+│   │           ├── log.html
+│   │           └── report.html
+│   └── ... (other apps same pattern)
+├── static/
+│   ├── css/
+│   ├── js/
+│   └── images/
+└── templates/
+    ├── base.html        <-- global base template
+    ├── navbar.html
+    └── footer.html
+
+3️⃣ How to reference templates in views
+# boats/views.py
+from django.shortcuts import render
+
+def boat_list(request):
+    return render(request, 'boats/list.html')
+
+# accounts/views.py
+def login_view(request):
+    return render(request, 'accounts/login.html')
+
+4️⃣ Base Template (Professional)
+
+templates/base.html – shared layout for all apps:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SeaSmart{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% include 'footer.html' %}
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
+
+✅ App template extending base
+<!-- boats/templates/boats/list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Boats List{% endblock %}
+
+{% block content %}
+<h1>All Boats</h1>
+<ul>
+    <!-- loop boats -->
+</ul>
+{% endblock %}
+
+5️⃣ Naming Conventions (Professional)
+Aspect	Recommendation
+App templates folder	<app_name> inside templates/
+Template files	lowercase, underscore, descriptive (list.html, detail.html)
+Shared templates	project-level templates/ (base.html, navbar.html)
+Static files	grouped by type (css/, js/, images/)
+App-level static (optional)	apps/<app>/static/<app>/css/...
+6️⃣ Django Settings (settings.py)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],  # project-level templates
+        'APP_DIRS': True,  # app-level templates auto-detect
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+
+✅ APP_DIRS = True → প্রতিটি app এর templates/<app_name>/ auto detect হবে
+
+💡 Pro Tip:
+
+সব apps একই style অনুসরণ করবে → consistency
+
+Global CSS, JS এবং navbar/footer কে base.html থেকে manage করো
+
+Individual app template শুধু content block handle করবে
